@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Próximo cumpleaños</title>
+  <style>
+    body {
+      background-color: #ffecec;
+      color: #000000;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #850c37;
+      margin-bottom: 10px;
+      white-space: pre-wrap;
+    }
+    .countdown {
+      font-size: 2em;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="name"></h1>
+  <div id="countdown" class="countdown"></div>
+
+  <script>
+    // NOTA: si subís este archivo manualmente, las {{...}} quedarán literales.
+    // El flujo ideal: Make genera un HTML final (con los valores) y lo sube a este archivo.
+    const namePlaceholder = "{{1.results[0].properties.Nombre.title[0].plain_text}}";
+    const datePlaceholder = "{{formatDate(1.results[0].properties['Próximo cumpleaños'].formula.date.start; 'YYYY-MM-DD')}}";
+
+    // Si Make ya subió valores reales, se usan; si no, mostramos texto de ejemplo:
+    const name = (namePlaceholder && !namePlaceholder.includes("{{")) ? namePlaceholder : "Nombre de prueba";
+    const birthday = (datePlaceholder && !datePlaceholder.includes("{{"))
+      ? new Date(datePlaceholder + "T00:00:00")
+      : (function(){ let d=new Date(); d.setDate(d.getDate()+7); return d; })(); // fecha de prueba dentro de 7 días
+
+    document.getElementById("name").innerText = `Cumple de ${name}`;
+
+    function updateCountdown() {
+      const now = new Date();
+      const diff = birthday - now;
+      const days = Math.floor(diff / (1000*60*60*24));
+      const hours = Math.floor((diff / (1000*60*60)) % 24);
+      const minutes = Math.floor((diff / (1000*60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+      const countdownEl = document.getElementById("countdown");
+
+      if (diff <= 0 && diff > -86400000) {
+        countdownEl.innerHTML = `🎉 Hoy es el cumpleaños de <br><strong>${name}</strong> 🎈🎈🎈`;
+        document.getElementById("name").innerText = "";
+      } else if (days === 1) {
+        countdownEl.innerText = `Mañana es el cumpleaños de ${name}`;
+      } else {
+        countdownEl.innerText = `${Math.max(days,0)}d ${Math.max(hours,0)}h ${Math.max(minutes,0)}m ${Math.max(seconds,0)}s`;
+      }
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  </script>
+</body>
+</html>
