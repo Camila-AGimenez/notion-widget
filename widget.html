@@ -35,16 +35,9 @@
   <div id="countdown" class="countdown"></div>
 
   <script>
-    // NOTA: si subís este archivo manualmente, las {{...}} quedarán literales.
-    // El flujo ideal: Make genera un HTML final (con los valores) y lo sube a este archivo.
-    const namePlaceholder = "{{1.results[0].properties.Nombre.title[0].plain_text}}";
-    const datePlaceholder = "{{formatDate(1.results[0].properties['Próximo cumpleaños'].formula.date.start; 'YYYY-MM-DD')}}";
-
-    // Si Make ya subió valores reales, se usan; si no, mostramos texto de ejemplo:
-    const name = (namePlaceholder && !namePlaceholder.includes("{{")) ? namePlaceholder : "Nombre de prueba";
-    const birthday = (datePlaceholder && !datePlaceholder.includes("{{"))
-      ? new Date(datePlaceholder + "T00:00:00")
-      : (function(){ let d=new Date(); d.setDate(d.getDate()+7); return d; })(); // fecha de prueba dentro de 7 días
+    // Make inyecta los valores reales aquí directamente
+    const name = "Taline Hermosa";
+    const birthday = new Date("2025-01-20T00:00:00");
 
     document.getElementById("name").innerText = `Cumple de ${name}`;
 
